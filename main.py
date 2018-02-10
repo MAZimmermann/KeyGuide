@@ -5,11 +5,7 @@ Created on Fri Feb  9 14:58:14 2018
 @author: MAZimmermann
 """
 
-import spotipy
-import spotipy.util as util
-
-#parameters for client information on Spotify's API
-scope = 'user-library-read'
+import requests
 
 with open('credentials.txt', 'r') as f:
     username = str.replace(f.readline(),'\n','')
@@ -19,10 +15,13 @@ with open('credentials.txt', 'r') as f:
     
     f.close()
 
-#attempts access to Spotify's API - post redirected URL in the console
-token = util.prompt_for_user_token(username, scope,
-                                   client_id=clientId, 
-                                   client_secret=clientSecret,
-                                   redirect_uri = redirect)
-
 def main():
+    
+    baseURL = 'https://accounts.spotify.com/api/token'
+    bodyParams = {'grant_type' : 'client_credentials'}
+    
+    appReq = requests.post(baseURL, data=bodyParams, auth=(clientId, clientSecret))
+    print(appReq)
+    print(appReq._content)
+
+main()
