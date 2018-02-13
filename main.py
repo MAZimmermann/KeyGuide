@@ -6,6 +6,7 @@ Created on Fri Feb  9 14:58:14 2018
 """
 
 import requests
+import json
 
 # Grab username, clientId, and clientSecret
 with open('credentials.txt', 'r') as f:
@@ -23,9 +24,16 @@ def main():
     bodyParams = {'grant_type' : 'client_credentials'}
     
     appReq = requests.post(baseURL, data=bodyParams, auth=(clientId, clientSecret))
-    print(appReq)
-    print(appReq._content)
+    # print(appReq.content)
+    
+    contentString = appReq.content
+    contentJSON = json.loads(contentString)
 
+    token = contentJSON['access_token']
+
+    print(token)
+    
+    # TODO: Use access token to access Spotify Web API
     # TODO: Define scope, pull key from song data
 
 main()
