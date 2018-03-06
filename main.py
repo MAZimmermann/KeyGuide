@@ -17,41 +17,48 @@ with open('credentials.txt', 'r') as f:
 
 def main():
     
-    ##########
+    ########## ########## ########## ########## ##########
     # Request Access Token
     ##########
     
     # Define base url for requesting access token
-    baseURL1 = 'https://accounts.spotify.com/api/token'
+    tokenRequestURL = 'https://accounts.spotify.com/api/token'
     # Define body parameters for requesting access token
-    bodyParams = {'grant_type' : 'client_credentials'}
+    tokenRequestBody = {'grant_type' : 'client_credentials'}
     
-    appReq = requests.post(baseURL1, data=bodyParams, auth=(clientId, clientSecret))
+    tokenRequest = requests.post(tokenRequestURL, data=tokenRequestBody, auth=(clientId, clientSecret))
+    print('Token Request Status: ',tokenRequest.status_code,'\n')
     
-    contentString = appReq.content
-    contentJSON = json.loads(contentString)
-
+    tokenRequestString = tokenRequest.content
+    tokenRequestJSON = json.loads(tokenRequestString)
+    
     # Access Token
-    token = contentJSON['access_token']
+    token = tokenRequestJSON['access_token']
  
-    ##########
+    
+    ########## ########## ########## ########## ##########
     # Request Track Information
     ##########
 
     # Define base url for track request
-    baseURL2 = 'https://accounts.spotify.com/v1//tracks/2TpxZ7JUBn3uw46aR7qd6V'
+    apiRequestURL = 'https://api.spotify.com/v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp'
     
-    bearer = 'Bearer' + token
+    bearerPlusToken = 'Bearer ' + token
     # TODO: Rename this...
-    bearHead = {
-    'Authorization': bearer
+    apiRequestHeader = {
+    'Authorization': bearerPlusToken
     }
+
+    apiRequest = requests.get(apiRequestURL, headers=apiRequestHeader)
+    print('API Request Status: ',apiRequest.status_code,'\n')
     
-    appReq2 = requests.get(baseURL2, headers=bearHead)
+    apiRequestString = apiRequest.content
+    apiRequestJSON = json.loads(apiRequestString)
+
+    print(apiRequestJSON['name'])
     
-    print(appReq2.content)
-    
-    # TODO: Use access token to access Spotify Web API
-    # TODO: Define scope, pull key from song data
+    # TODO: Define scope?
+    # Grab key of song
+    # Experiment with audio analysis
 
 main()
