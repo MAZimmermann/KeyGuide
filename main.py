@@ -17,21 +17,39 @@ with open('credentials.txt', 'r') as f:
 
 def main():
     
-    # define base url
-    baseURL = 'https://accounts.spotify.com/api/token'
+    ##########
+    # Request Access Token
+    ##########
     
-    # define body parameters
+    # Define base url for requesting access token
+    baseURL1 = 'https://accounts.spotify.com/api/token'
+    # Define body parameters for requesting access token
     bodyParams = {'grant_type' : 'client_credentials'}
     
-    appReq = requests.post(baseURL, data=bodyParams, auth=(clientId, clientSecret))
-    # print(appReq.content)
+    appReq = requests.post(baseURL1, data=bodyParams, auth=(clientId, clientSecret))
     
     contentString = appReq.content
     contentJSON = json.loads(contentString)
 
+    # Access Token
     token = contentJSON['access_token']
+ 
+    ##########
+    # Request Track Information
+    ##########
 
-    print(token)
+    # Define base url for track request
+    baseURL2 = 'https://accounts.spotify.com/v1//tracks/2TpxZ7JUBn3uw46aR7qd6V'
+    
+    bearer = 'Bearer' + token
+    # TODO: Rename this...
+    bearHead = {
+    'Authorization': bearer
+    }
+    
+    appReq2 = requests.get(baseURL2, headers=bearHead)
+    
+    print(appReq2.content)
     
     # TODO: Use access token to access Spotify Web API
     # TODO: Define scope, pull key from song data
